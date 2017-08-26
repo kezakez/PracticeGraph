@@ -6,7 +6,21 @@ namespace PracticeGraph
     {
         public static int GetDistance(params Node[] path)
         {
-            throw new System.NotImplementedException();
+            var sum = 0;
+            for (var index = 0; index < path.Length - 1; index++)
+            {
+                var node = path[index];
+                var nodeNext = path[index + 1];
+                if (node.EdgeDistances.ContainsKey(nodeNext))
+                {
+                    sum += node.EdgeDistances[nodeNext];
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            return sum;
         }
 
         public static List<Node[]> GetPathsWithMaximumHops(Node startNode, Node stopNode, int maximumHops)

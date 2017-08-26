@@ -115,7 +115,28 @@ namespace PracticeGraph
 
         public static List<Node[]> GetPathsWithMaximumDistance(Node startNode, Node stopNode, int maxDistance)
         {
-            throw new System.NotImplementedException();
+            var results = new List<Node[]>();
+            var searchStack = new Stack<PathNode>();
+            searchStack.Push(new PathNode { Value = startNode });
+            while (searchStack.Any())
+            {
+                var currentNode = searchStack.Pop();
+
+                if (currentNode.Value == stopNode && currentNode.Count() > 1)
+                {
+                    results.Add(currentNode.ToArray());
+                }
+                foreach (var nextNode in currentNode.Value.EdgeDistances.Keys)
+                {
+                    var currentPath = new PathNode { ParentNode = currentNode, Value = nextNode };
+                    var nextTotalPathDistance = GetDistance(currentPath.ToArray());
+                    if (nextTotalPathDistance < maxDistance)
+                    {
+                        searchStack.Push(currentPath);
+                    }
+                }
+            }
+            return results;
         }
     }
 }

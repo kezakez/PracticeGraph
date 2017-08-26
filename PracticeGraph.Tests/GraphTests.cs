@@ -61,7 +61,7 @@ namespace PracticeGraph.Tests
         }
 
         [TestMethod]
-        public void GetShortestPath()
+        public void GetShortestPathDistance()
         {
             Setup();
 
@@ -80,6 +80,5 @@ namespace PracticeGraph.Tests
             var pathsCtoC = Graph.GetPathsWithMaximumDistance(_c, _c, 30);
             Assert.AreEqual(7, pathsCtoC.Count);
         }
-
     }
 }

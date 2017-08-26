@@ -24,33 +24,11 @@ namespace PracticeGraph
             return sum;
         }
 
-        private class PathNode
-        {
-            public PathNode ParentNode { get; set; }
-            public Node Value { get; set; }
-            public Node[] ToArray()
-            {
-                var result = new LinkedList<Node>();
-                var current = this;
-                while (current != null)
-                {
-                    result.AddFirst(current.Value);
-                    current = current.ParentNode;
-                }
-                return result.ToArray();
-            }
-
-            public int Count()
-            {
-                return ToArray().Length;
-            }
-        }
-
         public static List<Node[]> GetPathsWithMaximumHops(Node startNode, Node stopNode, int maximumHops)
         {
             var result = new List<Node[]>();
             var searchQueue = new Queue<PathNode>();
-            searchQueue.Enqueue(new PathNode { Value = startNode });
+            searchQueue.Enqueue(new PathNode {Value = startNode});
             do
             {
                 var currentNode = searchQueue.Dequeue();
@@ -62,7 +40,7 @@ namespace PracticeGraph
 
                 foreach (var nextNode in currentNode.Value.EdgeDistances.Keys)
                 {
-                    var currentPath = new PathNode { ParentNode = currentNode, Value = nextNode };
+                    var currentPath = new PathNode {ParentNode = currentNode, Value = nextNode};
                     searchQueue.Enqueue(currentPath);
 
                     if (nextNode == stopNode)
@@ -70,7 +48,7 @@ namespace PracticeGraph
                         result.Add(currentPath.ToArray());
                     }
                 }
-            } while (searchQueue.Count > 0);
+            } while (searchQueue.Any());
 
             return result;
         }
@@ -81,9 +59,58 @@ namespace PracticeGraph
             return result.Where(path => path.Length - 1 == hops).ToList();
         }
 
-        public static int GetShortestPathDistance(Node startNode, Node stopNode)
+        public static int? GetShortestPathDistance(Node startNode, Node stopNode)
         {
-            throw new System.NotImplementedException();
+            var searchStack = new Stack<PathNode>();
+            searchStack.Push(new PathNode {Value = startNode});
+            int? shortestPathDistance = null;
+            while (searchStack.Count > 0)
+            {
+                var currentNode = searchStack.Pop();
+
+                if (currentNode.Value == stopNode && currentNode.Count() > 1)
+                {
+                    var distance = GetDistance(currentNode.ToArray());
+                    if (distance < shortestPathDistance || !shortestPathDistance.HasValue)
+                    {
+                        shortestPathDistance = distance;
+                    }
+                }
+                else
+                {
+                    if (!HasBeenVisited(searchStack, currentNode))
+                    {
+                        foreach (var nextNode in currentNode.Value.EdgeDistances.Keys)
+                        {
+                            var currentPath = new PathNode {ParentNode = currentNode, Value = nextNode};
+                            searchStack.Push(currentPath);
+                        }
+                    }
+                }
+            }
+
+            return shortestPathDistance;
+        }
+
+        private static bool HasBeenVisited(IEnumerable<PathNode> stack, PathNode node)
+        {
+            if (stack.Any(item => item.Value == node.Value))
+            {
+                return true;
+            }
+
+            var currentNode = node;
+            while (currentNode.ParentNode != null)
+            {
+                currentNode = currentNode.ParentNode;
+
+                if (node.Value == currentNode.Value)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static List<Node[]> GetPathsWithMaximumDistance(Node startNode, Node stopNode, int maxDistance)

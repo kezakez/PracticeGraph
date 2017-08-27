@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PracticeGraph.Tests
@@ -40,6 +42,8 @@ namespace PracticeGraph.Tests
             Assert.AreEqual(13, Graph.GetDistance(_a, _d, _c));
             Assert.AreEqual(22, Graph.GetDistance(_a, _e, _b, _c, _d));
             Assert.AreEqual(0, Graph.GetDistance(_a, _e, _d));
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetDistance(null, null));
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetDistance(_a, null));
         }
 
         [TestMethod]
@@ -49,6 +53,9 @@ namespace PracticeGraph.Tests
 
             var paths = Graph.GetPathsWithMaximumHops(_c, _c, 3);
             Assert.AreEqual(2, paths.Count);
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithMaximumHops(null, _c, 1));
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithMaximumHops(_c, null, 1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Graph.GetPathsWithMaximumHops(_c, _c, 0));
         }
 
         [TestMethod]
@@ -58,6 +65,9 @@ namespace PracticeGraph.Tests
 
             var paths = Graph.GetPathsWithHops(_a, _c, 4);
             Assert.AreEqual(3, paths.Count);
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithHops(null, _c, 1));
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithHops(_c, null, 1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Graph.GetPathsWithHops(_c, _c, 0));
         }
 
         [TestMethod]
@@ -70,6 +80,9 @@ namespace PracticeGraph.Tests
 
             var shortestBtoBDistance = Graph.GetShortestPathDistance(_b, _b);
             Assert.AreEqual(9, shortestBtoBDistance);
+
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetShortestPathDistance(null, _c));
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetShortestPathDistance(_c, null));
         }
 
         [TestMethod]
@@ -79,6 +92,9 @@ namespace PracticeGraph.Tests
 
             var pathsCtoC = Graph.GetPathsWithMaximumDistance(_c, _c, 30);
             Assert.AreEqual(7, pathsCtoC.Count);
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithMaximumDistance(null, _c, 1));
+            Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithMaximumDistance(_c, null, 1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Graph.GetPathsWithMaximumDistance(_c, _c, 0));
         }
     }
 }

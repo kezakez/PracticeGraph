@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PracticeGraph.App": {
+      "commandName": "Project",
+      "commandLineArgs": "customdata.txt"
+    }
+  }
+}

@@ -96,5 +96,28 @@ namespace PracticeGraph.Tests
             Assert.ThrowsException<ArgumentException>(() => Graph.GetPathsWithMaximumDistance(_c, null, 1));
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => Graph.GetPathsWithMaximumDistance(_c, _c, 0));
         }
+
+        [TestMethod]
+        public void SearchWithTwoCycles()
+        {
+            _a = new Node("A");
+            _b = new Node("B");
+            _c = new Node("C");
+            _d = new Node("D");
+            _e = new Node("E");
+
+            _a.AddEdge(_b, 1);
+            _b.AddEdge(_a, 1);
+            _a.AddEdge(_c, 1);
+            _c.AddEdge(_a, 1);
+            _d.AddEdge(_e, 1);
+
+            Assert.AreEqual(1, Graph.GetPathsWithMaximumHops(_c, _c, 3).Count);
+            Assert.AreEqual(0, Graph.GetPathsWithHops(_a, _c, 4).Count);
+            Assert.AreEqual(4, Graph.GetPathsWithHops(_a, _a, 4).Count);
+            Assert.AreEqual(1, Graph.GetShortestPathDistance(_a, _c));
+            Assert.AreEqual(2, Graph.GetShortestPathDistance(_b, _b));
+            Assert.AreEqual(16383, Graph.GetPathsWithMaximumDistance(_c, _c, 30).Count);
+        }
     }
 }

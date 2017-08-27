@@ -24,7 +24,6 @@ namespace PracticeGraph.App
             {
                 WriteOutput(result.Nodes);
             }
-            Console.ReadLine();
         }
 
         private static string GetFileContents(string filePath)
